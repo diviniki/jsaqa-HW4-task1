@@ -1,19 +1,21 @@
 let page;
 
+beforeEach(async () => {
+  page = await browser.newPage();
+  //await page.setDefaultNavigationTimeout(60000);
+});
+
+afterEach(() => {
+  page.close();
+});
+
 
 describe("Github page tests", () => {
 
   beforeEach(async () => {
-    //const browser = await puppeteer.launch({headless:false,SlowMo:20000});
-    page = await browser.newPage();
-    await page.setDefaultNavigationTimeout(60000);
-    await page.goto("https://github.com/team", {waitUntil: 'load', timeout: 60000});
+    await page.goto("https://github.com/team");
   });
   
-  afterEach(() => {
-    page.close();
-  });
-
   test("The h1 header content'", async () => {
     const firstLink = await page.$("header div div a");
     await firstLink.click();
@@ -22,7 +24,7 @@ describe("Github page tests", () => {
     //expect(title2).toEqual('GitHub: Where the world builds software · GitHub');
     //expect(title2).toEqual('GitHub for teams · Build like the best teams on the planet · GitHub');
     expect(title2).toEqual('GitHub · Build and ship software on a single, collaborative platform · GitHub');
-  });
+  }, 60000);
 
   test("The first link attribute", async () => {
     const actual = await page.$eval("a", link => link.getAttribute('href') );
@@ -44,13 +46,7 @@ describe("Github page tests", () => {
 describe("Additional tests", () => {
 
   beforeEach(async () => {
-    page = await browser.newPage();
-    await page.setDefaultNavigationTimeout(60000);
     await page.goto("https://github.com/features/copilot", {waitUntil: 'load', timeout: 30000});
-  });
-  
-  afterEach(() => {
-    page.close();
   });
 
   test("Additional test 1", async () => {
